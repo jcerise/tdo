@@ -9,7 +9,7 @@ import (
 type Item struct {
 	Text     string
 	Priority int
-	position int
+	Position int
 	Done     bool
 }
 
@@ -43,7 +43,7 @@ func (i *Item) PrettyDone() string {
 }
 
 func (i *Item) Label() string {
-	return strconv.Itoa(i.position) + "."
+	return strconv.Itoa(i.Position) + "."
 }
 
 // ByPriority implements sort.Interface, allowing us to sort lists of Items
@@ -56,7 +56,7 @@ func (s ByPriority) Less(i, j int) bool {
 		return !s[i].Done
 	}
 	if s[i].Priority == s[j].Priority {
-		return s[i].position < s[j].position
+		return s[i].Position < s[j].Position
 	}
 
 	return s[i].Priority < s[j].Priority
@@ -90,7 +90,7 @@ func ReadItems(filename string) ([]Item, error) {
 	}
 
 	for i, _ := range items {
-		items[i].position = i + 1
+		items[i].Position = i + 1
 	}
 
 	return items, nil

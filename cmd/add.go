@@ -5,7 +5,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"log"
-	"os"
 	"tdo/todo"
 )
 
@@ -18,14 +17,6 @@ var addCmd = &cobra.Command{
 }
 
 func addRun(cmd *cobra.Command, args []string) {
-	// Check if the file exists. If it does not, create it
-	if _, err := os.Stat(viper.GetString("datafile")); err != nil {
-		_, createErr := os.Create(viper.GetString("datafile"))
-		if createErr != nil {
-			log.Printf("%v", createErr)
-		}
-	}
-
 	items, err := todo.ReadItems(viper.GetString("datafile"))
 	if err != nil {
 		// TODO: handle the case of new, empty file

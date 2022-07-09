@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/viper"
 	"log"
 	"os"
+	"tdo/todo"
 )
 
 var dataFile string
@@ -30,19 +31,27 @@ func Execute() {
 }
 
 func initConfig() {
-	viper.SetConfigName(".tdo")
+	viper.SetConfigName(".tdo_config")
+	//viper.SetConfigType("yaml")
 	viper.AddConfigPath("$HOME")
-	viper.AutomaticEnv()
+	//viper.AutomaticEnv()
 
-	viper.SetEnvPrefix("tdo")
+	//viper.SetEnvPrefix("tdo")
 
 	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			fmt.Println("config file not found")
+		}
+	} else {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		fmt.Println("Datafile defined as:", viper.GetString("datafile"))
 	}
 }
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(todo.OpenOrCreateDataFile)
+
 	home, err := homedir.Dir()
 	if err != nil {
 		log.Println("Unable to detect home directory. Please set data file using --datafile.")

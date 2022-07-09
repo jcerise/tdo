@@ -24,14 +24,18 @@ func doneRun(cmd *cobra.Command, args []string) {
 		log.Fatalln(args[0], "is not a valid label\n", err)
 	}
 
-	if i > 0 && i < len(items) {
-		items[i-1].Done = true
-		fmt.Printf("%q %v\n", items[i-1].Text, "marked Done")
+	if i > 0 && i <= len(items) {
+		if items[i-1].Done == true {
+			fmt.Fprintln(cmd.OutOrStdout(), "item", i, "is already marked as done")
+		} else {
+			items[i-1].Done = true
+			fmt.Printf("%q %v\n", items[i-1].Text, "marked Done")
 
-		sort.Sort(todo.ByPriority(items))
-		todo.SaveItems(viper.GetString("datafile"), items)
+			sort.Sort(todo.ByPriority(items))
+			todo.SaveItems(viper.GetString("datafile"), items)
+		}
 	} else {
-		log.Println(i, "doesn't match any items")
+		fmt.Fprintln(cmd.OutOrStdout(), i, "doesn't match any items")
 	}
 }
 

@@ -2,7 +2,10 @@ package todo
 
 import (
 	"encoding/json"
+	"github.com/spf13/viper"
 	"io/ioutil"
+	"log"
+	"os"
 	"strconv"
 )
 
@@ -94,4 +97,16 @@ func ReadItems(filename string) ([]Item, error) {
 	}
 
 	return items, nil
+}
+
+func OpenOrCreateDataFile() {
+	// Check if the file exists. If it does not, create it
+	if _, err := os.Stat(viper.GetString("datafile")); err != nil {
+		_, createErr := os.Create(viper.GetString("datafile"))
+		if createErr != nil {
+			log.Printf("%v", createErr)
+		} else {
+			log.Printf("datafile %v does not exist...creating", viper.GetString("datafile"))
+		}
+	}
 }
